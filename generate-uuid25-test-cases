@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+// prepare cases manually
+const cases = [
+  "00000000000000000000000000000000",
+  "ffffffffffffffffffffffffffffffff",
+];
+
+// generate cases randomly
+const N_RANDOM_CASES = 16;
+for (let i = 0; i < N_RANDOM_CASES; i++) {
+  const binBuffer = new Uint8Array(16);
+  crypto.getRandomValues(binBuffer);
+
+  const strBuffer = new Array(16);
+  for (let j = 0; j < binBuffer.length; j++) {
+    strBuffer[j] = binBuffer[j].toString(16).padStart(2, "0");
+  }
+
+  cases.push(strBuffer.join(""));
+}
+
+// format and print
+for (const hex of cases) {
+  console.assert(hex.length == 32);
+
+  const uuid25 = BigInt("0x" + hex)
+    .toString(36)
+    .padStart(25, "0");
+  const hyphenated = hex
+    .match(/^(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})$/)
+    .slice(1, 6)
+    .join("-");
+
+  const result = {
+    uuid25,
+    hex,
+    hyphenated,
+    braced: "{" + hyphenated + "}",
+    urn: "urn:uuid:" + hyphenated,
+  };
+  console.log(JSON.stringify(result));
+}
