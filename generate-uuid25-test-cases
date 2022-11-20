@@ -31,6 +31,7 @@ for (const hex of cases) {
     .match(/^(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})$/)
     .slice(1, 6)
     .join("-");
+  const bytes = hex.match(/\w{2}/g).map((e) => Number.parseInt(e, 16));
 
   const result = {
     uuid25,
@@ -38,6 +39,7 @@ for (const hex of cases) {
     hyphenated,
     braced: "{" + hyphenated + "}",
     urn: "urn:uuid:" + hyphenated,
+    bytes,
   };
   console.log(JSON.stringify(result));
 }
